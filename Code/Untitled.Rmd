@@ -1,0 +1,101 @@
+---
+title: "SIT741 - Assignment 1"
+author: "Said Abdullahi"
+date: "25/07/2021"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Task 1: Obtaining ED demand data (16 points)
+
+```{r}
+#Task 1.1 Download the data set into R studio (4 points).
+library(dbplyr)
+library(tidyverse)
+ED_DEMAND <- read.csv("/Volumes/STORE\ N\ GO/govhack3.csv")
+View(ED_DEMAND)
+```
+
+
+```{r}
+#Task 1.2
+# How many ROWS and COLUMNS are in the data?
+nrow(ED_DEMAND)
+ncol(ED_DEMAND)
+```
+
+```{r}
+#Task 1.2
+# How many hospitals are in the data?
+
+```
+
+```{r}
+#Task 1.2
+#What data types are in the data?
+str(ED_DEMAND)
+#Use data type selection tree and provide detailed explanations
+```
+
+```{r}
+#What time period does the data cover?
+library(lubridate)
+#Remove the first row from the data frame
+ed_demand <- read.csv("/Volumes/STORE\ N\ GO/govhack3.csv", skip = 1)
+
+# Create a new data.frame with the newly formatted date field
+ed_demand <- ed_demand %>%
+  mutate(Date = dmy(Date))
+
+ed_demand %>%
+  summarise(start = min(Date),
+            end = max(Date))
+```
+
+# What's the difference between "Attendance" and "Admissions"
+Explain more
+
+# What do the variables Tri_1, Tri_2, ... represents?
+Explain more
+
+
+## Task 2: Tidy data (20 points)
+
+```{r}
+#Task 2.1 Cleaning up columns
+
+ed_data_link <- '/Volumes/STORE\ N\ GO/govhack3.csv'
+top_row <- read_csv(ed_data_link, col_names = FALSE, n_max = 1)
+second_row <- read_csv(ed_data_link, n_max = 1)
+
+column_names <- second_row %>%
+  unlist(., use.names = FALSE) %>%
+  make.unique(., sep = "__") # double underscore
+
+column_names[2:8] <- str_c(column_names[2:8], '0', sep='__')
+
+daily_attendance <- read_csv(ed_data_link, skip = 2, col_names = column_names)
+```
+
+```{r}
+# Now print out a list of healthcare facilities (hospitals) in data set
+
+hospitals <- top_row %>%
+  unlist(., use.names = FALSE) #list of all the hospital with NA
+#Remove NA from the list
+hospital_names <- na.omit(hospitals)
+#print out the list of hospitals
+hospital_names
+```
+
+
+## Task 2.2 Tidying data
+
+- Does each variable have its own column?
+- Does each observation have its own rows?
+- Does each value have its own cell?
